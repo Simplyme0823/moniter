@@ -13,7 +13,7 @@ let lastEvent;
     );
   }
 );
-
+console.log('lastevent')
 export default function () {
   return lastEvent;
 }

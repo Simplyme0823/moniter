@@ -14,7 +14,7 @@ export function timing() {
     let perfEntries = entryList.getEntries();
     LCP = perfEntries[0];
     observer.disconnect(); //不再观察
-  }).observe({ entryTypes: ["largest-contentful-paint"] }); //观察页面中有意义的元素
+  }).observe({ entryTypes: ["largest-contentful-paint"] }); //观察页面中最大的元素
 
   new PerformanceObserver((entryList, observer) => {
     let lastEvent = getLastEvent();
@@ -26,16 +26,6 @@ export function timing() {
       let duration = firstInput.duration;
       if (inputDelay > 0 || duration > 0) {
         tracker.send({
-          kind: "experience",
-          type: "firstInputDelay",
-          inputDelay,
-          duration,
-          startTime: firstInput.startTime,
-          selector: lastEvent
-            ? getSelector(lastEvent.path || lastEvent.target)
-            : "",
-        });
-        console.log({
           kind: "experience",
           type: "firstInputDelay",
           inputDelay,
@@ -74,7 +64,7 @@ export function timing() {
         responseTime: responseEnd - responseStart, //响应的读取时间
         parseDOMTime: loadEventStart - domLoading, //DOM解析时间
         domContentLoadedTime:
-          domContentLoadedEventEnd - domContentLoadedEventStart, //dom外链加载时间
+          domContentLoadedEventEnd - domContentLoadedEventStart, //外链加载时间
         timeToInteractive: domInteractive - fetchStart, //首次可交互时间
         loadTime: loadEventEnd - loadEventStart,
       });

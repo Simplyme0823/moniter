@@ -15,27 +15,18 @@ function getExtraData() {
 class SendTracker {
   constructor() {
     this.url = `${project}.${host}/logstores/${logstore}/track`;
+    this.sendBeacon = navigator.sendBeacon ? navigator.sendBeacon : undefined
     this.xhr = new XMLHttpRequest();
   }
   send(data = {}) {
     let extraData = getExtraData();
     let log = { ...data, ...extraData };
-    //对象的值不能是数字 阿里云的要求
-    Object.keys(log).forEach((item) => {
-      if (typeof log[item] === "number") {
-        log[item] = `${log[item]}`;
-      }
-    });
+
     this.xhr.open("POST", this.url, true);
     let body = JSON.stringify({
       __logs__: log,
     });
-    this.xhr.setRequestHeader("x-log-apiversion", "0.6.0");
-    this.xhr.setRequestHeader("x-log-bodyrawsize", body.length);
     this.xhr.setRequestHeader("Content-Type", "application/json");
-    this.xhr.setRequestHeader("x-log-compresstype", "lz4");
-    this.xhr.onload = function () {};
-    this.xhr.onerror = function () {};
     this.xhr.send(body);
   }
 }

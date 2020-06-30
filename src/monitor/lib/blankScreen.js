@@ -1,5 +1,6 @@
 import tracker from "../utils/tracker";
 import onload from "../utils/onload";
+
 export function blankScreen() {
   function getSelector(element) {
     if (element.id) {
@@ -18,7 +19,7 @@ export function blankScreen() {
   }
 
   //空元素，页面的 容器元素
-  let wrapperElements = ["html", "bnody", "#container", ".content"];
+  let wrapperElements = ["html", "body"];
   let emptyPoints = 0;
 
   function isWrapper(element) {
@@ -30,6 +31,7 @@ export function blankScreen() {
 
   onload(function () {
     for (let i = 1; i <= 9; i++) {
+      // 由里到外的所有元素
       let xElements = document.elementsFromPoint(
         (window.innerWidth * i) / 10,
         window.innerHeight / 2

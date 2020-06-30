@@ -1,9 +1,10 @@
 import getLastEvent from "../utils/getLastEvent";
 import getSelector from "../utils/getSelector";
 import tracker from "../utils/tracker";
-
 export function injectJsError() {
   window.addEventListener("error", (event) => {
+    event.preventDefault()
+    // 全局捕捉资源加载错误
     if (event.target && (event.target.src || event.target.href)) {
       tracker.send({
         kind: "stability", //监控指标的大类
@@ -16,6 +17,8 @@ export function injectJsError() {
       });
       return;
     }
+    let lastEvent = getLastEvent()
+    //JS运行时的错误捕捉
     tracker.send({
       kind: "stability", //监控指标的大类
       type: "error", //小类型，这是一个错误
@@ -25,11 +28,13 @@ export function injectJsError() {
       filename: event.filename,
       position: `${event.lineno}:${event.colno}`,
       stack: getLines(event.error.stack),
-      selector: lastEvent ? getSelector(lastEvent) : "", //代表最后一个操作的元素
+      selector: lastEvent ? getSelector(lastEvent.target) : "", //代表最后一个操作的元素
     });
   });
 
-  window.addEventListener("unhandledrejection", (event) => {
+    // 全局捕捉promise错误
+    window.addEventListener("unhandledrejection", (event) => {
+    event.preventDefault()
     let lastEvent = getLastEvent();
     let message;
     let filename;
@@ -57,16 +62,15 @@ export function injectJsError() {
       filename: filename,
       position: `${line}:${column}`,
       stack: stack,
-      selector: lastEvent ? getSelector(lastEvent) : "", //代表最后一个操作的元素
+      selector: lastEvent ? getSelector(lastEvent.target) : "", //代表最后一个操作的元素
     };
     tracker.send(log);
   });
 }
 
 function getLines(stack) {
-  console.log(stack);
   return stack
     .split("\n")
     .slice(1)
-    .map((item) => item.replace(/^\s+at\s+/g, "").join("^"));
+    .map((item) => item.replace(/^\s+at\s+/g, "")).join("^");
 }

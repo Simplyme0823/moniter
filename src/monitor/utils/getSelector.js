@@ -5,9 +5,9 @@ function getSelectors(path) {
     .map((elem) => {
       let selector = "";
       if (elem.id) {
-        return `{elem.tagName.toLowerCase()}#${elem.id}`;
+        return `${elem.tagName.toLowerCase()}#${elem.id}`;
       } else if (elem.className && typeof elem.className === "string") {
-        return `{elem.className.toLowerCase()}#${elem.className}`;
+        return `${elem.className.toLowerCase()}#${elem.className}`;
       } else {
         selector = elem.nodeName.toLowerCase();
       }
