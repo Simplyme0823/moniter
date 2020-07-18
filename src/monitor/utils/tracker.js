@@ -1,4 +1,6 @@
-let host = "cn-beijing.log.aliyuncs.com";
+/** @format */
+
+let host = "http://127.0.0.1:7001/statistics";
 let project = "zhufengmonitor";
 let logstore = "zhufengmonitor-sore";
 
@@ -14,8 +16,9 @@ function getExtraData() {
 //fig图片做上传 图片速度快，没有跨域问题
 class SendTracker {
   constructor() {
-    this.url = `${project}.${host}/logstores/${logstore}/track`;
-    this.sendBeacon = navigator.sendBeacon ? navigator.sendBeacon : undefined
+    // this.url = `${project}.${host}/logstores/${logstore}/track`;
+    this.url = `${host}`;
+    this.sendBeacon = navigator.sendBeacon ? navigator.sendBeacon : undefined;
     this.xhr = new XMLHttpRequest();
   }
   send(data = {}) {
